@@ -40,11 +40,6 @@ pipeline {
             steps {
                 sh 'mvn checkstyle:checkstyle'
             }
-            post {
-                always {
-                    recordIssues tool: checkStyle(pattern: '**/target/checkstyle-result.xml')
-                }
-            }
         }
 
         stage('SonarQube Analysis') {
