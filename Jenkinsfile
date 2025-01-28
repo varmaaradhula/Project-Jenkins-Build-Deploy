@@ -1,4 +1,4 @@
-pipeline {
+pipeline{
 	agent any
 
 	   tools {
@@ -26,7 +26,7 @@ pipeline {
             }
         }
 
-        stage(' Build the code with Maven'){
+        stage("Build the code with Maven"){
 
             steps{
 
