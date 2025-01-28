@@ -14,6 +14,7 @@ pipeline {
         IMAGE_TAG = "${env.BUILD_ID}" // Using the Jenkins Build ID as the Docker image tag
         SONARQUBE_SERVER = 'SonarServer' // SonarQube server name configured in Jenkins
         AWS_REGION = 'eu-west-2' // AWS region
+        CLUSTER_NAME = 'myvpro-EKS-Cluster'
     }
 
     stages {
@@ -86,6 +87,45 @@ pipeline {
                         dockerImage.push("${IMAGE_TAG}")
                         dockerImage.push('latest')
                     }
+                }
+            }
+        }
+
+        stage('Config AWS credentials'){
+            steps {
+                withCredentials([
+                    [$class: 'AmazonWebServicesCredentialsBinding', 
+                     credentialsId: 'awscreds'] // Replace with your Jenkins credential ID
+                ]) {
+                    script {
+                        // AWS credentials will be available as environment variables
+                        sh '''
+                        echo "Configuring AWS CLI"
+                        aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
+                        aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
+                        aws configure set default.region ${AWS_REGION}
+                        '''
+                    }
+                }
+            }
+        }
+
+        stage('Get Kubeconfig file') {
+
+            steps{
+
+                script{
+
+                    sh "aws eks update-kubeconfig --region ${AWS_REGION} --name ${CLUSTER_NAME}" // Replace with your EKS cluster name
+
+                }
+            }
+        }
+           stage('Deploy to EKS') {
+            steps {
+                script {
+
+                    sh "helm upgrade --install myvproapp ./helm/vprofilecharts --set appimage=${IMAGE_NAME} --set apptag=${IMAGE_TAG} --set awsRegion=${AWS_REGION} --set ecrRepo=${ECR_REGISTRY}" // Pass additional variables to Helm
                 }
             }
         }
