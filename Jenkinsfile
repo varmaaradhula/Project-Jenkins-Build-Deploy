@@ -1,7 +1,7 @@
 pipeline{
 	agent any
 
-	   tools {
+	tools {
         maven "MAVEN3"
         jdk "JDK17"
     }
@@ -87,7 +87,7 @@ pipeline{
             }
         }
          stage('Build App Image') {
-          steps {
+            steps {
        
             script {
                 dockerImage = docker.build( imageName + ":$BUILD_NUMBER", "./Dockerfile")
@@ -97,8 +97,8 @@ pipeline{
         }
 
         stage('Upload App Image') {
-          steps{
-            script {
+            steps{
+              script {
               docker.withRegistry( ECR_REGISTRY, registryCredential ) {
                 dockerImage.push("$BUILD_NUMBER")
                 dockerImage.push('latest')
