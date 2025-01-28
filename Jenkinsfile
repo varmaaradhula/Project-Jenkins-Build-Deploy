@@ -22,7 +22,7 @@ pipeline {
 
             steps{
 
-                git clone branch: 'master', url: 'https://github.com/varmaaradhula/Project-Jenkins-Build-Deploy.git'
+                git branch: 'master', url: 'https://github.com/varmaaradhula/Project-Jenkins-Build-Deploy.git'
             }
         }
 
