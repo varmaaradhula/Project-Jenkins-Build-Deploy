@@ -7,7 +7,7 @@ pipeline {
     }
     environment {
         ECR_REGISTRY = "https://400675223919.dkr.ecr.eu-west-2.amazonaws.com" // Replace with your ECR registry
-        IMAGE_NAME = '400675223919.dkr.ecr.eu-west-2.amazonaws.com/myvproappimage'
+        IMAGE_NAME = '400675223919.dkr.ecr.eu-west-2.amazonaws.com/myvproapp'
         registryCredential = 'ecr:eu-west-2:awscreds'
         REPO_NAME = 'myvproapp' // ECR repository name
         IMAGE_TAG = "${env.BUILD_ID}"  // Using build ID as the Docker image tag
